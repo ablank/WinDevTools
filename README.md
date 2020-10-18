@@ -6,11 +6,11 @@ These are the steps I take to setup local development.
 
 ## Directory Structure
 
-Create a local project directory (i.e. `C:\dev`) to contain  subdirectories for each project.
-
-Create a subdirectory for each project (i.e. `C:\dev\drupal7`, `C:\dev\wordpress`)
-
 Create a directory for each language you choose to install in either the root directory or a `lang` subdirectory on root. This will make it easier to reference paths and support multiple versions.
+
+Create a local project directory (i.e. `C:\dev`) to contain subdirectories for all projects.  Place the `index.php` from this repo here to return phpinfo.
+
+Each project will go into its own subdirectory (i.e. `C:\dev\drupal7`, `C:\dev\wordpress`). Either `cd C:\dev` before cloning/installing with package manager, or create the project directory manually and extract files.
 
 ## Internet Information Services (IIS)
 
@@ -22,22 +22,24 @@ Create a directory for each language you choose to install in either the root di
 
 2. Download & Install the [FastCGI Extension]('https://www.iis.net/downloads/microsoft/fastcgi-for-iis')
 
-3. Download & Install PHP Manager for IIS (*from this repo*)
+3. Download & Install PHP Manager for IIS (*in this repo*)
 
-4. Set the hosts file
+4. Set the Windows hosts file
 
-   - **Run Notepad (or your preferred editor) as Administrator** Find the program, right-click, Run as administrator
-   - Open `C:\Windows\System32\drivers\etc\hosts`
-   - To listen for http://dev.local, add `127.0.0.1       dev.local` to the hosts file.
+   - **Run Notepad (or your preferred editor) as Administrator** Find the program, right-click > Run as administrator
+   - Open the file `C:\Windows\System32\drivers\etc\hosts` 
+     
+      \* `hosts` **is not** a "Text Document" - look for "All Files"
+   - To listen for http://dev.local, add `127.0.0.1       dev.local`
 
 5. Setup a new site in IIS
 
-   - Expand root directory, Right click on Sites > Add Website
-   - Site name = dev.local (*or whatever*)
+   - Open IIS, Expand root directory, Right click on Sites > Add Website
+   - Site name = `dev.local`
    - Physical path = `C:\dev`
    - Host name = `dev.local`
 
-6. Test server configuration by navigating to `http://dev.local` in a browser
+6. Test server configuration by navigating to `http://dev.local` in a browser- phpinfo should be returned by `C:\dev\index.php`.
 
 ## Version Control
 
@@ -45,32 +47,38 @@ Create a directory for each language you choose to install in either the root di
 
 2. Download & install [PuttyGen]('https://www.puttygen.com/download-putty')
 
-3. Generate private keys with PuttyGen, save to local machine & upload to your git server
+3. Generate private keys with PuttyGen, save to local machine & upload to your git server.
 
 ## PHP
 
-1. [Download desired PHP versions]('') (*non-thread-safe*) and extract to `C:\PHP\\*version*`
+1. [Download desired PHP versions]('https://windows.php.net/download/') (*non-thread-safe for IIS*) and extract to `C:\PHP\*version*`
 
 2. Create a new directory `C:\PHP\Temp`
 
-3. Open IIS and register each PHP version
+3. Open IIS PHP Manager and register each PHP version under the PHP Setup section.
 
-4. Update each `php.ini` to fix configuration and enable extensions
+4. Update each `php.ini` to set configuration and enable extensions
 
 \* *The `php.ini` in this repo is for v.7.4.11 nts with recommended settings*
-    - `extension_dir = "C:\PHP\7.4.11\ext\"`
-    - `error_log = "C:\PHP\php-7.4.11_errors.log"`
-    - `upload_tmp_dir = "C:\PHP\Temp\"`
-    - `; Recommended Opcache settings
+
+```
+extension_dir = "C:\PHP\7.4.11\ext\"
+
+error_log = "C:\PHP\php-7.4.11_errors.log"
+
+upload_tmp_dir = "C:\PHP\Temp\"
+
+; Recommended Opcache settings
 opcache.enable=1
 opcache.enable_cli=1
 opcache.memory_consumption=128
 opcache.interned_strings_buffer=8
 opcache.max_accelerated_files=4000
 opcache.revalidate_freq=60
-opcache.fast_shutdown=1`
+opcache.fast_shutdown=1
+```
 
-1. Download & install [Composer]('https://getcomposer.org/Composer-Setup.exe')
+5. Download & install [Composer]('https://getcomposer.org/Composer-Setup.exe')
 
 ## Nodejs
 
