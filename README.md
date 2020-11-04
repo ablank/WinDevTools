@@ -6,7 +6,7 @@ These are the steps I take to setup local development.
 
 ## Directory Structure
 
-Create a directory for each language you choose to install in either the root directory or a `lang` subdirectory on root. This will make it easier to reference paths and support multiple versions.
+Create a directory for each language you choose to install in either the root directory or a `lang` subdirectory on root (*i.e. `C:\Nodejs`, `C:\PHP`, `C:\Python`, etc.*). This will make it easier to reference paths and support multiple versions.
 
 Create a local project directory (i.e. `C:\dev`) to contain subdirectories for all projects.  Place the `index.php` from this repo here to return phpinfo.
 
@@ -43,30 +43,41 @@ Each project will go into its own subdirectory (i.e. `C:\dev\drupal7`, `C:\dev\w
 
 ## Version Control
 
-1. Download & install [git]('https://git-scm.com/download/win') & [Sourcetree]('https://www.sourcetreeapp.com/')
+1. Download & install [git]('https://git-scm.com/download/win'), [PuttyGen]('https://www.puttygen.com/download-putty'), and [Sourcetree]('https://www.sourcetreeapp.com/').
 
-2. Download & install [PuttyGen]('https://www.puttygen.com/download-putty')
+2. Generate private keys with PuttyGen, save to local machine & upload to your git server.
 
-3. Generate private keys with PuttyGen, save to local machine & upload to your git server.
+## Nodejs
+
+1. Download & install [Nodejs]('https://nodejs.org/')
+
+2. Install NPM packages globally
+   ```
+   npm install -g browserify bower grunt-cli gulp postcss-cli jshint karma-cli mocha
+   ```
 
 ## PHP
 
 1. [Download desired PHP versions]('https://windows.php.net/download/') (*non-thread-safe for IIS*) and extract to `C:\PHP\*version*`
 
-2. Create a new directory `C:\PHP\Temp`
+2. Create a new directory `C:\PHP\Temp` (*there can be issues with writing to `C:\Windows\` directories*).
 
 3. Open IIS PHP Manager and register each PHP version under the PHP Setup section.
 
-4. Update each `php.ini` to set configuration and enable extensions
+4. Additional extensions like [xdebug]('https://xdebug.org/wizard') should be placed in `C:\PHP\*version*\ext\`
 
-\* *The `php.ini` in this repo is for v.7.4.11 nts with recommended settings*
+5. Update each registered version's  `php.ini` to configure php and enable extensions.
+
+\* *The `php.ini` in this repo is configured for v.7.4.11-nts with extensions enabled using recommended settings.*
 
 ```
+; Find & Modify these default settings:
+
 extension_dir = "C:\PHP\7.4.11\ext\"
-
 error_log = "C:\PHP\php-7.4.11_errors.log"
-
 upload_tmp_dir = "C:\PHP\Temp\"
+
+; Add these settings to the end of php.ini:
 
 ; Recommended Opcache settings
 opcache.enable=1
@@ -76,20 +87,16 @@ opcache.interned_strings_buffer=8
 opcache.max_accelerated_files=4000
 opcache.revalidate_freq=60
 opcache.fast_shutdown=1
+
+; xdebug
+;zend_extension = php_xdebug-2.9.8-7.4-vc15-nts-x86_64.dll
 ```
 
-5. Download & install [Composer]('https://getcomposer.org/Composer-Setup.exe')
-
-## Nodejs
-
-1. Download & install [Nodejs]('https://nodejs.org/en/')
-
-2. Install NPM packages globally
-   - `npm install -g grunt-cli gulp `
+6. Download & install [Composer]('https://getcomposer.org/Composer-Setup.exe').
 
 ## Python
 
-1. Download & install [Python](https://www.python.org/downloads/) (*recommend both 2 & 3, but only add v3 to Windows system Path*)
+1. Download & install [Python](https://www.python.org/downloads/) (*install both 2.x & 3.x, but rename v2's `python.exe` to `py2.exe` before adding to system Path.*).
 
 2. Install global packages
    - `pip install pandas pandasgui `
@@ -108,20 +115,39 @@ opcache.fast_shutdown=1
 2. Download & install a database manager
    - [HeidiSQL]('https://www.heidisql.com/download.php'), [Adminer]('https://www.adminer.org/'), [phpMyAdmin]('https://www.phpmyadmin.net/downloads/')
   
-3. Create empty databases for each system to be developed (django, drupal7, drupal9, wordpress)
+3. Create empty databases for each system to be developed (*django, drupal7, drupal9, wordpress, etc.*)
 
 ## Setup
 
-1. Download & extract  [Drupal]('https://www.drupal.org/project/drupal/releases') and [Wordpress]('https://wordpress.org/download/') to the dev directory
+1. Git Drupal & Wordpress:
+
+     ```
+     cd C:\dev
+     git clone --branch 7.x https://git.drupalcode.org/project/drupal.git d7
+     git clone --branch 9.2.x https://git.drupalcode.org/project/drupal.git d9
+     git clone https://github.com/WordPress/WordPress.git wp
+     ```
+     OR
+     Download & extract  [Drupal]('https://www.drupal.org/project/drupal/releases') and [Wordpress]('https://wordpress.org/download/') to the dev directory
 
    - i.e. `C:\dev\drupal7`, `C:\dev\wordpress`)
 
-2. Install & manage Drupal with git & composer:
-
-    - `cd C:\dev`
-    - `git clone --branch 7.x https://git.drupalcode.org/project/drupal.git d7`
-    - `git clone --branch 9.2.x https://git.drupalcode.org/project/drupal.git d9`
-
-3. Navigate to the correct subdirectory from the local dev directory in a browser (i.e. `http://dev.local/drupal7`, `http://dev.local/wordpress`) to install the CMS.
+3. Navigate to the directory in a browser (i.e. `http://dev.local/d9`, `http://dev.local/wp`) to install the CMS.
 
 4. Check the php_error.log to confirm configuration is correct (*if no log file is present, all is well*)
+
+\* The Devel module for Drupal 9 requires Doctrine Debug. 
+1. Open the `composer.json` file in the D9 root directory
+
+2. Add the requirement 
+```
+"require": {
+  "doctrine/common": "^2"
+  ...
+```
+
+3. Open a console and 
+```
+cd path\to\drupal
+composer update
+```
